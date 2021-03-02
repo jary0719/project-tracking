@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">添加用户</h4>
+</div>
+<form id="userForm" th:action="@{/user/save}" method="post" th:object="${user}">
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="username">用户名</label>
+            <input type="hidden" id="id" name="id"  th:field="*{id}">
+            <input type="text" class="form-control" id="username" name="username" th:field="*{username}">
+        </div>
+        <div class="form-group">
+            <label for="password">密码</label>
+            <input type="password" class="form-control" id="password" name="password" th:field="*{password}">
+        </div>
+        <div class="form-group">
+            <label for="password">密码</label>
+            <input type="password" class="form-control" id="passwordRepeat" name="passwordRepeat">
+        </div>
+        <div class="form-group">
+            <label for="nickName">昵称</label>
+            <input type="text" class="form-control" id="nickName" name="nickName" th:field="*{nickName}">
+        </div>
+        <div class="form-group">
+            <label for="mobile">手机号</label>
+            <input type="text" class="form-control" id="mobile" name="mobile"  th:field="*{mobile}">
+        </div>
+        <div class="form-group">
+            <label for="email">邮箱</label>
+            <input type="email" class="form-control" id="email" name="email"  th:field="*{email}">
+        </div>
+        <div class="form-group">
+            <label for="email">启用账户</label>
+            <select class="form-control" id="disabled" name="disabled"  th:field="*{disabled}">
+                <option value="false">启用</option>
+                <option value="true">禁用</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">关闭</button>
+        <button type="submit" class="btn btn-primary">提交</button>
+    </div>
+</form>
+
+<script th:inline="javascript">
+    $(function () {
+        jQuery.validator.addMethod("isMobile", function (value, element) {
+            var length = value.length;
+            var mobile = /^(13[0-9]{9})|(18[0-9]{9})|(14[0-9]{9})|(17[0-9]{9})|(15[0-9]{9})$/;
+            return this.optional(element) || (length == 11 && mobile.test(value));
+        }, "请正确填写手机号码");
+
+        $("#userForm").validate({
+            rules: {
+                username: {
+                    required: true,
+                    minlength: 1,
+                    remote: {
+                        url: "/user/check-username",
+                        type: "get",
+                        data: {
+                            username: function () {
+                                return $("#username").val();
+                            },
+                            id: function () {
+                                return $("#id").val();
+                            }
+                        }
+                    }
+                },
+                passwordRepeat: {
+                    required: true,
+                    equalTo: '#password'
+                },
+                mobile: {
+                    required: true,
+                    isMobile: true
+                },
+                email: {
+                    email: true
+                }
+            },
+            messages: {
+                username: {
+                    required: "请输入用户名",
+                    remote: "用户名已存在"
+                }
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            success: function (element) {
+                element.closest('.form-group').removeClass('has-error');
+                $(element).closest('.error').remove();
+            },
+            submitHandler: function () {
+                $("#userForm").ajaxSubmit({
+                    success: function (data) {
+                        $('#modal-default').modal('hide');
+                        $("#dataTable").bootstrapTable("refresh");
+                    },
+                    error: function (data) {
+                        layer.msg('出错了', {icon: 5});
+                    },
+                    clearForm: true
+                });
+            }
+        });
+    })
+</script>

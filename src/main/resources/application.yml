@@ -1,0 +1,33 @@
+spring:
+  cache: false
+  mvc:
+    date-format: yyyy-MM-dd
+  jackson:
+    date-format: yyyy-MM-dd hh:mm:ss
+
+
+server:
+  port: 8180
+
+logging:
+  level:
+    net:
+      suncaper:
+        projecttracking:
+          mapper: Debug
+          client:
+            UserClient: DEBUG
+#    org:
+#      springframework:
+#        security: debug
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: false
+
+sms:
+  accessKeyId: LTAI4FdXfKtxb9Zoa4t95gfb
+  accessSecret: bR39AhfOSRBijCBoL4jnEllvWVVPju
+  SignName: 项目督导

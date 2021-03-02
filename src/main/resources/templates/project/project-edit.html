@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="content-wrapper" th:fragment="content">
+    <section class="content-header">
+        <h1>
+            创建项目
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+            <li><a href="#">创建项目</a></li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <!-- /.box-header -->
+                    <form id="projectForm" th:action="@{/project/save}" method="post" th:object="${project}">
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label for="year">项目年份</label>
+                                <input type="text" class="form-control" id="year" th:field="*{year}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">项目名</label>
+                                <input type="hidden" id="id" name="id" th:field="*{id}">
+                                <input type="text" class="form-control" th:field="*{name}">
+                            </div>
+                            <div class="form-group">
+                                <label for="projectStatusId">项目进度</label>
+                                <div class="radio" th:each="status: ${dictMap.PROJECT_STATUS}">
+                                    <label>
+                                        <input type="radio" name="projectStatusId" id="projectStatusId"
+                                               th:value="${status.id}">
+                                        [[${status.value}]]
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="projectStatusId">项目批次类型</label>
+                                <div class="radio" th:each="projectType: ${dictMap.PROJECT_TYPE}">
+                                    <label>
+                                        <input type="radio" name="projectTypeId" id="projectTypeId"
+                                               th:value="${projectType.id}">
+                                        [[${projectType.value}]]
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="projectStatusId">重要性</label>
+                                <div class="checkbox" th:each="projectImportance: ${dictMap.PROJECT_IMPORTANCE}">
+                                    <label>
+                                        <input type="checkbox" th:field="*{importanceIds}"
+                                               th:value="${projectImportance.id}">
+                                        [[${projectImportance.value}]]
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>归口部门</label>
+                                <select class="form-control select2" style="width: 100%;" id="deptId"
+                                        th:field="*{deptId}">
+                                    <option value="">请选择</option>
+                                    <option th:each="dept: ${allDepts}" th:value="${dept.id}"
+                                            th:text="${dept.deptName}"/>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>牵头委领导 </label>
+                                <select class="form-control select2" style="width: 100%;" th:field="*{leaderIds}"
+                                        multiple="multiple">
+                                    <option value="">请选择</option>
+                                    <option th:each="leader: ${allLeaders}" th:value="${leader.id}"
+                                            th:text="${leader.nickName}"/>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>项目秘书 </label>
+                                <select class="form-control select2" style="width: 100%;" th:field="*{secretaryId}">
+                                    <option value="">请选择</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>联络人 </label>
+                                <select class="form-control select2" style="width: 100%;" th:field="*{contactId}"
+                                        id="contactId">
+                                    <option value="">请选择</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>业主单位：</label>
+                                <select multiple="multiple" class="form-control select2" style="width: 100%;"
+                                        th:field="*{jointCompanyIds}">
+                                    <option th:each="company:${allCompanies}" th:value="${company.id}"
+                                            th:text="${company.companyName}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="companyIdNum">企业证件编号</label>
+                                <input type="text" class="form-control" th:field="*{companyIdNum}">
+                            </div>
+                            <div class="form-group">
+                                <label>协同单位：</label>
+                                <select multiple="multiple" class="form-control select2" style="width: 100%;"
+                                        th:field="*{jointDeptIds}">
+                                    <option th:each="jointDept:${allJointDepts}" th:value="${jointDept.id}"
+                                            th:text="${jointDept.deptName}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="content">主要建设内容及规
+                                    模</label>
+                                <textarea class="form-control" rows="3" th:field="*{content}"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="totalInvestment">总投资额</label>
+                                <input type="number" class="form-control" th:field="*{totalInvestment}">
+                            </div>
+                            <div class="form-group">
+                                <label for="yearInvestment">当年计划完成投资</label>
+                                <input type="number" class="form-control" th:field="*{yearInvestment}">
+                            </div>
+                            <div class="form-group">
+                                <label for="startDate">开工时间</label>
+                                <input type="text" class="form-control month-picker" id="startDate"
+                                       th:field="*{startDate}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="endDate">完工时间</label>
+                                <input type="text" class="form-control month-picker" id="endDate" th:field="*{endDate}"
+                                       readonly>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">提交</button>
+                        </div>
+                    </form>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+    <!-- /.modal -->
+    <!-- /.content -->
+
+    <script>
+        $(function () {
+            $("#year").datepicker({
+                format: "yyyy",
+                viewMode: "years",
+                minViewMode: "years",
+                language: 'zh-CN',
+                autoclose: true
+            });
+
+            $(".month-picker").datepicker({
+                format: "yyyy-mm",
+                viewMode: "months",
+                minViewMode: "months",
+                language: 'zh-CN',
+                autoclose: true
+            });
+
+            $('.select2').select2();
+
+            $("#deptId").change(function () {
+                $('#contactId option:not(:first)').remove();
+                $('#secretaryId option:not(:first)').remove();
+
+                $.ajax({
+                    url: '/user/contacts',
+                    type: 'get',
+                    data: {
+                        deptId: $("#deptId").val()
+                    },
+                    success: function (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            //清空option
+                            $("#contactId").append(new Option(data[i].nickName, data[i].id));
+                        }
+                    }
+                });
+
+                $.ajax({
+                    url: '/user/secretaries',
+                    type: 'get',
+                    data: {
+                        deptId: $("#deptId").val()
+                    },
+                    success: function (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            //清空option
+                            $("#secretaryId").append(new Option(data[i].nickName, data[i].id));
+                        }
+                    }
+                });
+            })
+        })
+    </script>
+</div>

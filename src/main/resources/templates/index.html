@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{include/head :: content}">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <header th:replace="~{include/header :: content}"></header>
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside th:replace="~{include/sidebar :: content}"></aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div th:replace="~{${page} :: content}"></div>
+    <!-- /.content-wrapper -->
+    <footer th:replace="~{include/footer :: content}"></footer>
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $('#modal-default').on('show.bs.modal', function (e) {
+                var url = $(e.relatedTarget).attr('href');
+                $('#modal-default .modal-content').load(url);
+            });
+
+            $('#modal-default').on('hide.bs.modal', function (e) {
+                $('#modal-default .modal-content').empty();
+            });
+        })
+    </script>
+</div>
+</body>
+</html>
